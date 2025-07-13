@@ -1,0 +1,10 @@
+name: pyblock
+main: tk.bridgersilk.pyblock.PyBlock
+version: 0.0.1
+api-version: 1.15
+description: Create minecraft plugins at runtime with python!
+commands:
+  pyblock:
+    description: Main command for PyBlock
+    usage: /pyblock
+    aliases: [pb]
