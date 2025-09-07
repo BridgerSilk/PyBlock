@@ -5,14 +5,13 @@ import java.util.Map;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import tk.bridgersilk.pyblock.scripts.ScriptManager;
 
-public class PlayerJoinListener implements Listener {
-
+public class PlayerQuitListener implements Listener {
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerQuit(PlayerQuitEvent event) {
         String playerName = event.getPlayer().getName();
         String eventWorld = event.getPlayer().getWorld().getName();
 
@@ -20,7 +19,7 @@ public class PlayerJoinListener implements Listener {
         context.put("event", event);
         context.put("player", playerName);
         context.put("world", eventWorld);
-
-        ScriptManager.callEventFunction("event_player_join", context);
+        
+        ScriptManager.callEventFunction("event_player_quit", context);
     }
 }

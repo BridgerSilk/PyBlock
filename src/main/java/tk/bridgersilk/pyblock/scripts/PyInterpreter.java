@@ -16,25 +16,41 @@ public class PyInterpreter {
 	private PythonInterpreter interpreter;
 
 	public boolean load(File file) {
-		try {
-			interpreter = new PythonInterpreter();
+        try {
+            interpreter = new PythonInterpreter();
 
-			interpreter.set("broadcast", makeCallable(msg -> BroadcastEffect.broadcast(msg)));
-            interpreter.set("cancelEvent", makeCallableWithEvent((eventObj) -> {
+            // Inject runtime callables
+            interpreter.set("broadcast", makeCallable(msg -> BroadcastEffect.broadcast(msg)));
+            interpreter.set("cancel_event", makeCallableWithEvent((eventObj) -> {
                 if (eventObj instanceof Event event) {
                     CancelEventEffect.cancelEvent(event);
                 } else {
-                    System.out.println("cancelEvent called with non-event: " + eventObj);
+                    System.out.println("cancel_event called with non-event: " + eventObj);
                 }
             }));
 
-			interpreter.execfile(file.getAbsolutePath());
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
+            // Preprocess script: skip lines importing pyblock
+            StringBuilder cleanedSource = new StringBuilder();
+            try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(file))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.trim().startsWith("import pyblock") || line.trim().startsWith("from pyblock")) {
+                        // Skip pyblock imports completely
+                        continue;
+                    }
+                    cleanedSource.append(line).append("\n");
+                }
+            }
+
+            // Execute the cleaned script
+            interpreter.exec(cleanedSource.toString());
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 	public void callFunction(String functionName, Object... args) {
 		try {

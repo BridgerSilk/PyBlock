@@ -43,8 +43,11 @@ public class ScriptManager {
     public static void callEventFunction(String functionName, Object... args) {
         for (PyInterpreter interpreter : loadedScripts.values()) {
             try {
-                if (args.length > 0 && args[0] instanceof Event event) {
-                    EventContext.setCurrentEvent(event);
+                if (args.length > 0 && args[0] instanceof Map<?, ?> map) {
+                    Object rawEvent = map.get("event");
+                    if (rawEvent instanceof Event event) {
+                        EventContext.setCurrentEvent(event);
+                    }
                 }
 
                 interpreter.callFunction(functionName, args);

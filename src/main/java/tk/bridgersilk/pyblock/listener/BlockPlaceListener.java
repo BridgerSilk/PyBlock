@@ -5,13 +5,13 @@ import java.util.Map;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 
 import tk.bridgersilk.pyblock.scripts.ScriptManager;
 
-public class BlockBreakListener implements Listener {
+public class BlockPlaceListener implements Listener {
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
+    public void onBlockBreak(BlockPlaceEvent event) {
         String playerName = event.getPlayer().getName();
         String blockType = event.getBlock().getType().name();
         Map<String, Object> eventLocation = new HashMap<>();
@@ -22,7 +22,6 @@ public class BlockBreakListener implements Listener {
         eventLocation.put("pitch", event.getBlock().getLocation().getPitch());
         eventLocation.put("yaw", event.getBlock().getLocation().getYaw());
         String eventWorld = event.getPlayer().getWorld().getName();
-        Boolean dropItems = event.isDropItems();
 
         Map<String, Object> context = new HashMap<>();
         context.put("event", event);
@@ -30,8 +29,7 @@ public class BlockBreakListener implements Listener {
         context.put("world", eventWorld);
         context.put("block", blockType);
         context.put("location", eventLocation);
-        context.put("drop_items", dropItems);
 
-        ScriptManager.callEventFunction("event_block_break", context);
+        ScriptManager.callEventFunction("event_block_place", context);
     }
 }

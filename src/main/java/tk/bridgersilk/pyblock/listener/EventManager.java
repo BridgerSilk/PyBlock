@@ -10,6 +10,8 @@ public class EventManager {
         PluginManager pm = plugin.getServer().getPluginManager();
         pm.registerEvents(new PlayerJoinListener(), plugin);
         pm.registerEvents(new BlockBreakListener(), plugin);
-        // register more listeners here
+        pm.registerEvents(new BlockPlaceListener(), plugin);
+        pm.registerEvents(new PlayerQuitListener(), plugin);
+        pm.registerEvents(new PlayerChatListener(), plugin);
     }
 }
