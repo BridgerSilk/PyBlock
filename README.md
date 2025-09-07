@@ -1,6 +1,6 @@
 <h1 align="center">🌍 PyBlock</h1>
 <p align="center">
-  PyBlock is a powerful plugin for Minecraft servers that lets you write server-side logic using <b>Python</b> instead of Java. Built with <a href="https://www.jython.org/">Jython</a>, it provides a <b>flexible and scriptable</b> way to control in-game behavior with ease.
+  PyBlock is a powerful plugin for Minecraft servers that lets you write server-side logic using <b>Python</b> instead of Java during runtime. Built with <a href="https://www.jython.org/">Jython</a>, it provides a <b>flexible and scriptable</b> way to control in-game behavior with ease.
 </p>
 
 <p align="center">
@@ -13,7 +13,7 @@
 
 ## 💡 About
 
-PyBlock brings Python scripting to Minecraft servers. Want to cancel a block break? Broadcast a message when a player joins? You can do it all in just a few lines of Python, without ever touching Java.
+PyBlock brings Python scripting to Minecraft servers. Want to cancel a block break event? Broadcast a message when a player joins or even create minigames? You can do it all in just a few lines of Python, without ever touching Java.
 
 PyBlock is ideal for server owners and developers who want the flexibility of plugins, without compiling Java code or restarting the server for every change.
 
@@ -23,7 +23,7 @@ PyBlock is ideal for server owners and developers who want the flexibility of pl
 
 - ✅ Write Minecraft Bukkit API logic in Python
 - 📦 Reload scripts with a single command while the server is running
-- 🔧 Built-in utility functions like `broadcast()` and `cancelEvent()`
+- 🔧 Built-in utility functions like `broadcast()` and `cancel_event()`
 - 🧠 Thread-local event context handling for safe execution
 - 📁 Simple file-based script loading system
 
@@ -36,16 +36,22 @@ Here's how easy it is to use PyBlock:
 ```python
 # prevent blocks from being broken
 
-def event_block_break(event, player, block):
-    broadcast(player + " tried braking a " + block)
-    cancelEvent(event)  # Prevent the block from breaking
+# if you open the scripts folder with an IDE you can import features from pyblock to make pylance recognize them (doesn't affect how the script runs)
+from pyblock import cancel_event, broadcast
+
+def event_block_break(event):
+    broadcast(event.get("player") + " tried braking a " + event.get("block"))
+    cancel_event(event.get("event"))  # Prevent the block from breaking
 ````
 
 ```python
 # greet players on server join
 
-def event_player_join(event, player):
-    broadcast("Welcome to the server, " + player + "!")
+# if you open the scripts folder with an IDE you can import features from pyblock to make pylance recognize them (doesn't affect how the script runs)
+from pyblock import broadcast
+
+def event_player_join(event):
+    broadcast("Welcome to the server, " + event.get("player") + "!")
 ```
 
 These Python functions get automatically called when the respective events (e.g. `BlockBreakEvent`, `PlayerJoinEvent`) are fired.
