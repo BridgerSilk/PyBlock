@@ -13,5 +13,7 @@ public class EventManager {
         pm.registerEvents(new BlockPlaceListener(), plugin);
         pm.registerEvents(new PlayerQuitListener(), plugin);
         pm.registerEvents(new PlayerChatListener(), plugin);
+        pm.registerEvents(new PlayerCommandPreprocessListener(), plugin);
+        pm.registerEvents(new PlayerMoveListener(), plugin);
     }
 }
