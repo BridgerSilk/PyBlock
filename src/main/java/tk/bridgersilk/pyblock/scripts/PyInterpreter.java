@@ -10,6 +10,7 @@ import org.python.util.PythonInterpreter;
 
 import tk.bridgersilk.pyblock.effects.BroadcastEffect;
 import tk.bridgersilk.pyblock.effects.CancelEventEffect;
+import tk.bridgersilk.pyblock.storage.VarStorage;
 
 public class PyInterpreter {
 
@@ -19,7 +20,7 @@ public class PyInterpreter {
         try {
             interpreter = new PythonInterpreter();
 
-            // Inject runtime callables
+            // inject runtime callables
             interpreter.set("broadcast", makeCallable(msg -> BroadcastEffect.broadcast(msg)));
             interpreter.set("cancel_event", makeCallableWithEvent((eventObj) -> {
                 if (eventObj instanceof Event event) {
@@ -29,20 +30,37 @@ public class PyInterpreter {
                 }
             }));
 
-            // Preprocess script: skip lines importing pyblock
+            // inject storage functions
+            interpreter.set("save_var", new PyObject() {
+                @Override
+                public PyObject __call__(PyObject name, PyObject value) {
+                    String varName = name.toString();
+                    Object javaValue = value.__tojava__(Object.class);
+                    VarStorage.saveVar(varName, javaValue);
+                    return Py.None;
+                }
+            });
+            interpreter.set("load_var", new PyObject() {
+                @Override
+                public PyObject __call__(PyObject name) {
+                    String varName = name.toString();
+                    Object loaded = VarStorage.loadVar(varName);
+                    return Py.java2py(loaded);
+                }
+            });
+
+            // preproccess script: ignore client-side pyblock imports (only needed for pylance)
             StringBuilder cleanedSource = new StringBuilder();
             try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(file))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     if (line.trim().startsWith("import pyblock") || line.trim().startsWith("from pyblock")) {
-                        // Skip pyblock imports completely
                         continue;
                     }
                     cleanedSource.append(line).append("\n");
                 }
             }
 
-            // Execute the cleaned script
             interpreter.exec(cleanedSource.toString());
 
             return true;
@@ -57,9 +75,8 @@ public class PyInterpreter {
 			PyObject func = interpreter.get(functionName);
 			if (func != null && func.isCallable()) {
 				try {
-					func.__call__(); // Try calling with no arguments
+					func.__call__();
 				} catch (Exception ignored) {
-					// Fallback to calling with provided arguments
 					func.__call__(Arrays.stream(args).map(Py::java2py).toArray(PyObject[]::new));
 				}
 			}
@@ -68,7 +85,7 @@ public class PyInterpreter {
 		}
 	}
 
-	// Helper for no-arg callables
+    // no arg callable helper
 	private PyObject makeCallable(Runnable runnable) {
 		return new PyObject() {
 			@Override
@@ -79,7 +96,7 @@ public class PyInterpreter {
 		};
 	}
 
-	// Helper for single-string-arg callables
+	// single string arg callable helper
 	private PyObject makeCallable(java.util.function.Consumer<String> consumer) {
 		return new PyObject() {
 			@Override

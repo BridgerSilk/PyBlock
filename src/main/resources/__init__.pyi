@@ -11,3 +11,16 @@ def cancel_event(event: str) -> None:
     Cancels a Bukkit event (e.g., BlockBreakEvent).
     """
     ...
+
+def save_var(entry_name: str, entry_value: Any) -> None:
+    """
+    Save a variable to the variables.csv file.
+    (variables reset after stopping the server without saving them)
+    """
+    ...
+
+def load_var(entry_name: str) -> None:
+    """
+    Load a variable from the variables.csv file.
+    """
+    ...
