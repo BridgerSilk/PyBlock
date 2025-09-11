@@ -21,12 +21,13 @@ public class PlayerDropItemListener implements Listener {
         UUID itemUUID = event.getItemDrop().getUniqueId();
 
         Map<String, Object> context = new HashMap<>();
+        context.put("event", event);
         context.put("player", playerName);
         context.put("player_uuid", playerUUID);
         context.put("world", eventWorld);
         context.put("material", itemMaterial);
         context.put("item_uuid", itemUUID);
 
-        ScriptManager.callEventFunction("event_item_drop", context);
+        ScriptManager.callEventFunction("event_player_drop", context);
     }
 }

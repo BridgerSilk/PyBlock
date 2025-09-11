@@ -2,6 +2,7 @@ package tk.bridgersilk.pyblock.listener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,6 +14,7 @@ public class BlockPlaceListener implements Listener {
     @EventHandler
     public void onBlockBreak(BlockPlaceEvent event) {
         String playerName = event.getPlayer().getName();
+        UUID playerUUID = event.getPlayer().getUniqueId();
         String blockType = event.getBlock().getType().name();
         Map<String, Object> eventLocation = new HashMap<>();
         eventLocation.put("world", event.getBlock().getLocation().getWorld().getName());
@@ -22,6 +24,7 @@ public class BlockPlaceListener implements Listener {
         eventLocation.put("pitch", event.getBlock().getLocation().getPitch());
         eventLocation.put("yaw", event.getBlock().getLocation().getYaw());
         String eventWorld = event.getPlayer().getWorld().getName();
+        String blockAgainst = event.getBlockAgainst().getType().name();
 
         Map<String, Object> context = new HashMap<>();
         context.put("event", event);
@@ -29,6 +32,8 @@ public class BlockPlaceListener implements Listener {
         context.put("world", eventWorld);
         context.put("block", blockType);
         context.put("location", eventLocation);
+        context.put("block_against", blockAgainst);
+        context.put("player_uuid", playerUUID);
 
         ScriptManager.callEventFunction("event_block_place", context);
     }

@@ -2,6 +2,7 @@ package tk.bridgersilk.pyblock.listener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,6 +14,7 @@ public class PlayerMoveListener implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         String playerName = event.getPlayer().getName();
+        UUID playerUUID = event.getPlayer().getUniqueId();
         String eventWorld = event.getPlayer().getWorld().getName();
         Map<String, Object> pastLocation = new HashMap<>();
         pastLocation.put("world", event.getFrom().getWorld().getName());
@@ -35,6 +37,7 @@ public class PlayerMoveListener implements Listener {
         context.put("world", eventWorld);
         context.put("past_location", pastLocation);
         context.put("future_location", futureLocation);
+        context.put("player_uuid", playerUUID);
 
         ScriptManager.callEventFunction("event_player_move", context);
     }

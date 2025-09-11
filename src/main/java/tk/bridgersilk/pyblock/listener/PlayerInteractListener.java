@@ -2,6 +2,7 @@ package tk.bridgersilk.pyblock.listener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -22,6 +23,7 @@ public class PlayerInteractListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         String playerName = event.getPlayer().getName();
+        UUID playerUUID = event.getPlayer().getUniqueId();
         String eventWorld = event.getPlayer().getWorld().getName();
         BlockFace blockFace = event.getBlockFace();
         Action action = event.getAction();
@@ -60,6 +62,7 @@ public class PlayerInteractListener implements Listener {
         context.put("hand", hand);
         context.put("item", item);
         context.put("material", material);
+        context.put("player_uuid", playerUUID);
 
         ScriptManager.callEventFunction("event_player_interact", context);
     }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,6 +16,7 @@ public class PlayerChatListener implements Listener {
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         String playerName = event.getPlayer().getName();
+        UUID playerUUID = event.getPlayer().getUniqueId();
         String eventWorld = event.getPlayer().getWorld().getName();
         String message = event.getMessage();
         Set<String> recipients = new HashSet<>();
@@ -28,6 +30,7 @@ public class PlayerChatListener implements Listener {
         context.put("world", eventWorld);
         context.put("message", message);
         context.put("recipients", recipients);
+        context.put("player_uuid", playerUUID);
 
         ScriptManager.callEventFunction("event_chat", context);
     }
