@@ -17,5 +17,6 @@ public class EventManager {
         pm.registerEvents(new PlayerMoveListener(), plugin);
         pm.registerEvents(new PlayerKickListener(), plugin);
         pm.registerEvents(new PlayerInteractListener(), plugin);
+        pm.registerEvents(new PlayerDropItemListener(), plugin);
     }
 }
