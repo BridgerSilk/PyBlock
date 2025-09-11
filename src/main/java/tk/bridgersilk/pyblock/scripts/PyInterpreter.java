@@ -2,6 +2,7 @@ package tk.bridgersilk.pyblock.scripts;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.UUID;
 
 import org.bukkit.event.Event;
 import org.python.core.Py;
@@ -10,6 +11,7 @@ import org.python.util.PythonInterpreter;
 
 import tk.bridgersilk.pyblock.effects.BroadcastEffect;
 import tk.bridgersilk.pyblock.effects.CancelEventEffect;
+import tk.bridgersilk.pyblock.expressions.entity.expHealth;
 import tk.bridgersilk.pyblock.storage.VarStorage;
 
 public class PyInterpreter {
@@ -29,6 +31,9 @@ public class PyInterpreter {
                     System.out.println("cancel_event called with non-event: " + eventObj);
                 }
             }));
+
+            // inject expressions
+            interpreter.set("get_health", makeFunction(uuid -> expHealth.getHealth(uuid)));
 
             // inject storage functions
             interpreter.set("save_var", new PyObject() {
@@ -106,6 +111,23 @@ public class PyInterpreter {
 			}
 		};
 	}
+
+    // function helper for returning data (primarily expressions)
+    private PyObject makeFunction(java.util.function.Function<UUID, ?> function) {
+        return new PyObject() {
+            @Override
+            public PyObject __call__(PyObject arg) {
+                try {
+                    UUID uuid = UUID.fromString(arg.toString());
+                    Object result = function.apply(uuid);
+                    return Py.java2py(result);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid UUID passed to function: " + arg);
+                    return Py.None;
+                }
+            }
+        };
+    }
 
     private PyObject makeCallableWithEvent(java.util.function.Consumer<Object> consumer) {
         return new PyObject() {
