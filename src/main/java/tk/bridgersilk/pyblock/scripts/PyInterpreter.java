@@ -12,6 +12,7 @@ import org.python.util.PythonInterpreter;
 import tk.bridgersilk.pyblock.effects.BroadcastEffect;
 import tk.bridgersilk.pyblock.effects.CancelEventEffect;
 import tk.bridgersilk.pyblock.expressions.entity.expHealth;
+import tk.bridgersilk.pyblock.expressions.global.expLocation;
 import tk.bridgersilk.pyblock.storage.VarStorage;
 
 public class PyInterpreter {
@@ -34,6 +35,7 @@ public class PyInterpreter {
 
             // inject expressions
             interpreter.set("get_health", makeFunction(uuid -> expHealth.getHealth(uuid)));
+            interpreter.set("get_location", makeFunction(uuid -> expLocation.getLocation(uuid)));
 
             // inject storage functions
             interpreter.set("save_var", new PyObject() {

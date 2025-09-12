@@ -29,8 +29,14 @@ def cancel_event(event: str) -> None:
     ...
 
 # EXPRESSIONS ##########################################################################################################################
-def get_health(entity_uuid: uuid.UUID) -> float:
+def get_health(livingentity_uuid: uuid.UUID) -> float:
     """
     Gets the health of a LivingEntity.
+    """
+    ...
+
+def get_location(entity_uuid: uuid.UUID) -> dict:
+    """
+    Gets the location of an entity.
     """
     ...
