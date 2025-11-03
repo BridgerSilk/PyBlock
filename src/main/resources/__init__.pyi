@@ -35,6 +35,12 @@ def cancel_event(event: str) -> None:
     ...
 
 # EXPRESSIONS ##########################################################################################################################
+def get_active_item(livingentity_uuid: uuid.UUID) -> ItemStack:
+    """
+    Gets the item currently in use by a LivingEntity.
+    """
+    ...
+
 def get_health(livingentity_uuid: uuid.UUID) -> float:
     """
     Gets the health of a LivingEntity.
@@ -57,24 +63,65 @@ def get_uuid(player_name: str) -> uuid.UUID:
 
 class new_item:
     """
-    A chainable item builder for creating custom ItemStacks.
+    Create a new ItemStack instance.
+    Use Material.* for the item type.
     """
 
     def __init__(self, material: str | Material, amount: int = 1, plugin: Any = None): ...
-    def name(self, name: str) -> "new_item": ...
-    def amount(self, amount: int) -> "new_item": ...
-    def add_lore(self, line: str) -> "new_item": ...
-    def set_lore(self, lore: List[str]) -> "new_item": ...
-    def add_enchantment(self, enchant: Enchantment, level: int) -> "new_item": ...
-    def unbreakable(self, unbreakable: bool) -> "new_item": ...
-    def add_item_flags(self, *flags: ItemFlag) -> "new_item": ...
-    def custom_model_data(self, data: Optional[int]) -> "new_item": ...
-    def persistent_data(self, key: str, value: str) -> "new_item": ...
-    def build(self) -> ItemStack: ...
+    def name(self, name: str) -> "new_item":
+        """
+        Set the name of an item. (colors supported)
+        """
+        ...
+    def amount(self, amount: int) -> "new_item":
+        """
+        Set the amount of an item.
+        """
+        ...
+    def add_lore(self, line: str) -> "new_item":
+        """
+        Set the lore lines of an item. (colors supported)
+        """
+        ...
+    def set_lore(self, lore: List[str]) -> "new_item":
+        """
+        Add a lore line to an item. (colors supported)
+        """
+        ...
+    def add_enchantment(self, enchant: Enchantment, level: int) -> "new_item":
+        """
+        Add an enchantment to an item. (Enchantment.*)
+        """
+        ...
+    def unbreakable(self, unbreakable: bool) -> "new_item":
+        """
+        Set wheter an item should drain durability.
+        """
+        ...
+    def add_item_flags(self, *flags: ItemFlag) -> "new_item":
+        """
+        Add a custom item flag to an item. (ItemFlag.*)
+        """
+        ...
+    def custom_model_data(self, data: Optional[int]) -> "new_item":
+        """
+        Add custom model data to an item.
+        """
+        ...
+    def persistent_data(self, key: str, value: str) -> "new_item":
+        """
+        Add persistent data to an item.
+        """
+        ...
+    def build(self) -> ItemStack:
+        """
+        Return the custom ItemStack instance.
+        """
+        ...
 
 # Types ##################################################################################################################################
 class ItemStack:
-    """Represents a Bukkit ItemStack (result of ItemBuilder.build())."""
+    """Represents a Bukkit ItemStack (result of new_item.build())."""
     ...
 
 # Bukkit Enums ###########################################################################################################################
