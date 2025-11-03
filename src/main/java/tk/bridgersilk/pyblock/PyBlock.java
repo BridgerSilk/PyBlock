@@ -4,6 +4,7 @@ import tk.bridgersilk.pyblock.command.PyBlockCommand;
 import tk.bridgersilk.pyblock.config.ConfigManager;
 import tk.bridgersilk.pyblock.listener.EventManager;
 import tk.bridgersilk.pyblock.scripts.ScriptManager;
+import tk.bridgersilk.pyblock.utils.MaterialStubGenerator;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,6 +29,9 @@ public class PyBlock extends JavaPlugin
         getLogger().info("Registering events...");
 		EventManager.registerEvents(this);
 
+        // generate stubs
+        MaterialStubGenerator.ensureMaterialStub(this);
+        
 		// load scripts
         getLogger().info("Loading scripts...");
 		ScriptManager.loadAllScripts();
